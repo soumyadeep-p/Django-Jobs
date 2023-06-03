@@ -36,7 +36,7 @@ def register_recruiter(request):
             Company.objects.create(user = var)
             messages.info(request, 'Your account has been created! Please login')
             return redirect('login')
-        else:
+        else :
             messages.warning(request, 'Something went wrong!')
             return redirect('register-recruiter')
     else:
