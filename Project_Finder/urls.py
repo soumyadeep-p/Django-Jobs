@@ -21,5 +21,7 @@ urlpatterns = [
     path('accounts/', include('users.urls')),
     path('company/', include('company.urls')),
     path('dashboard/', include('dashboard.urls')),
-    path('resume/',include('resume.urls'))
+    path('resume/',include('resume.urls')),
+    path('job/',include('job.urls')),
+    path('', include('website.urls')), 
 ]
