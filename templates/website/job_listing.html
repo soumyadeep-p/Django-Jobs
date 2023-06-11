@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load humanize %}
+{% load humanize %} 
 
 {% block content %}
 
@@ -21,13 +21,19 @@
         <div class="card h-100">
             <div class="card-body">
                 <h5 class="card-title">{{job.title}}</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to 
-                    additional content. This content is a little bit longer.</p>
-                    <p class="card-text"> {{job.salary}}</p>
+                <p class="card-text">Job Location : {{job.location}}</p>                   
+                <p class="card-text"> {{job.salary| intcomma}}</p>
+                <p class="card-text"> Posted by (Company Name): {{job.company}}</p>
+
+                <a class="btn btn-primary btn-sm" href = "{% url 'job-details' job.pk %}"> View Details </a>
+                
+
             </div>
             <div class="card-footer">
                 <small class="text-muted">Created {{job.timestamp|naturaltime}}</small>
             </div>
+
+
             
         </div>
     </div>
@@ -36,3 +42,5 @@
 </div>
 <br>
 {% endblock content %}
+
+
