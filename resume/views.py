@@ -10,7 +10,7 @@ def update_resume(request):
     if request.user.is_applicant : #check so that recruiter cannot create a resume
         resume = Resume.objects.get(user=request.user)
         if request.method == 'POST' :
-            form = UpdateResumeForm(request.POST, instance=resume)
+            form = UpdateResumeForm(request.POST, request.FILES, instance=resume)
             if form.is_valid():
                 var = form.save(commit=False)
                 user = User.objects.get(pk = request.user.id)
@@ -20,12 +20,12 @@ def update_resume(request):
                 messages.info(request, ' Your resume info has been updated.')
                 return redirect('dashboard')
             else :
-                messages.warning('Something went wrong')
+                messages.warning(request, 'Something went wrong')
         else :
             form = UpdateResumeForm(instance=resume)
             context = {'form':form}
             return render(request, 'resume/update_resume.html', context)
-    else: 
+    else:
         messages.warning(request,'Permission denied') #denied recruiter to create a resume
         return redirect('dashboard')
     

@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import User
 from company.models import Company
+from resume.models import Resume
 
 class State(models.Model):
     name = models.CharField(max_length=100)
@@ -47,3 +48,4 @@ class ApplyJob(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=status_choices)
+    

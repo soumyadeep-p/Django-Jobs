@@ -26,7 +26,7 @@
                     <td>{{applicant.user.resume.location}}</td>
                     <td>{{applicant.user.resume.job_title}}</td>
                     <td>{{applicant.timestamp}}</td>
-                    <td><a href="#"><small>Download Resume</small></a></td>
+                    <td><a target="_blank" href="{{applicant.user.resume.upload_resume.url}}"><small>Download Resume</small></a></td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -22,7 +22,7 @@
                 {% for job in jobs %}
                 <tr>
                     <td>{{job.title}}</td>
-                    <td>{{job.location}}</td>
+                    <td>{{job.city}}, {{job.state}}</td>
                     <td>{{job.salary}}</td>
                     <td>{{job.applyjob_set.all.count }} <a href="{% url 'all-applicants' job.pk %}"><small>View all</small></a></td> <!-- No. of Applicants Calc-->
 

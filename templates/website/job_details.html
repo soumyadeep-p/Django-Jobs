@@ -8,7 +8,7 @@
         <div class="container-fluid py-5">
             <h2 class="display-5 fw-bold">{{job.title}}</h2>
             <p class="col-md-8 fs-5 mt-3">
-                {{job.location}} | Remote | NGN{{job.salary|intcomma}}
+                {{job.state}} | Remote | NGN{{job.salary|intcomma}}
             </p>
             {% if user.is_authenticated %}
             {% if has_applied == False %}
