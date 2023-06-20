@@ -38,14 +38,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.humanize", 
+    "django.contrib.humanize",
+
     "users",
     "resume",
     "company",
     "dashboard",
     "widget_tweaks",
     "job", 
-    "website"
+    "website",
+
+    'django_filters'
 ]
 
 MIDDLEWARE = [

@@ -18,6 +18,9 @@ def register_applicant(request):
             messages.info(request, 'Your account has been created! Please login')
             return redirect('login')
         else:
+            for msg in form.error_messages:
+                messages.error(request, f"{msg}: {form.error_messages[msg]}")
+                print(msg)
             messages.warning(request, 'Something went wrong!')
             return redirect('register-applicant')
     else:
@@ -37,6 +40,9 @@ def register_recruiter(request):
             messages.info(request, 'Your account has been created! Please login')
             return redirect('login')
         else :
+            for msg in form.error_messages:
+                messages.error(request, f"{msg}: {form.error_messages[msg]}")
+                print(msg)
             messages.warning(request, 'Something went wrong!')
             return redirect('register-recruiter')
     else:
