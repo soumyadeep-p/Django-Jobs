@@ -1,3 +1,4 @@
+from difflib import context_diff
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from .models import Job,ApplyJob
@@ -76,3 +77,8 @@ def all_applicants(request, pk):
     context = {'job':job, 'applicants':applicants}
     return render(request, 'job/all_applicants.html', context)
 
+def applied_jobs(request):
+    jobs = ApplyJob.objects.filter(user=request.user)
+    context = {'jobs':jobs}
+    return render(request, 'job/applied_job.html', context)
+    
