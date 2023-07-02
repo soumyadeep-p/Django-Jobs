@@ -5,6 +5,8 @@ from .models import Job,ApplyJob
 from .forms import CreateJobForm,UpdateJobForm
 from users.models import User 
 from company.models import Company
+from notifications.models import Notif
+from resume.models import Resume
 
 
 def create_job(request):
@@ -16,6 +18,13 @@ def create_job(request):
                 var.user = request.user
                 var.company = request.user.company
                 var.save()
+                applicants = Resume.objects.filter(title = var.title)
+                for applicant in applicants:
+                    user = applicant.user
+                    Notif.objects.create(
+                        user = user,
+                        content = f'There is a new job opening for the role of {var.title} offered by {var.company}'
+                    )
                 messages.info(request, 'New job has been created')
                 return redirect('dashboard')
             else:
@@ -36,6 +45,13 @@ def update_job(request, pk):
         form = UpdateJobForm(request.POST, instance=job)
         if form.is_valid():
             form.save()
+            applicants = Resume.objects.filter(title = job.title)
+            for applicant in applicants:
+                user = applicant.user
+                Notif.objects.create(
+                    user = user,
+                    content = f'There has been an update in the job offer for the role of {job.title} offered by {job.company}'
+                )
             messages.info(request, 'Your job info is updated')
             return redirect('dashboard')
         else:
@@ -63,6 +79,12 @@ def apply_to_job(request, pk):
                 job = job,
                 user = request.user,
                 status = 'Pending'
+            )
+            applicant = Resume.objects.get(user=request.user)
+            applicant = f'{applicant.first_name} {applicant.surname}'
+            Notif.objects.create(
+                user = job.company.user,
+                content = f'{applicant} has applied to your company {job.company} for the role of {job.title}'
             )
             messages.info(request, 'You have successfully applied! Please see dashboard')
             return redirect('dashboard')

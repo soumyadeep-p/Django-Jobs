@@ -40,7 +40,6 @@
                     </li>
                     
                 </ul>
-                <a href="{% url 'logout' %}" class="btn btn-warning btn-sm">Logout</a> 
                 {% elif request.user.is_recruiter %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -64,14 +63,16 @@
                     </li>
                     
                 </ul>
-                <a href="{% url 'logout' %}" class="btn btn-warning btn-sm">Logout</a> 
                 {% endif %}
+                <a href="{% url 'notifications' %}" class="notification-link">
+                    <button class="notification-button">Notifications</button>
+                </a>
+                <a href="{% url 'logout' %}" class="btn btn-warning btn-sm">Logout</a>
                 {% else %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'job-listing' %}">All Jobs</a>
-                    </li>
-                    
+                    </li>  
                 </ul>
                 <a href="{% url 'login' %}" class="btn btn-warning btn-sm">Log In</a> 
                 {% endif %}

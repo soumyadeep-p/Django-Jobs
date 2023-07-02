@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+<h1>Notifications</h1>
+
+{% for notif in notifs %}
+<div >
+    <div class="card h-100">
+        <div class="card-body">
+            <p class="card-text"> {{notif.content}} </p>
+        </div>
+        <div class="card-footer">
+            <small class="text-muted">{{notif.timestamp|naturaltime}}</small>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock content %}

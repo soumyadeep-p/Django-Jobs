@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "job", 
     "website",
+    "notifications",
 
     'django_filters'
 ]

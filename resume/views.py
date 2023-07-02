@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib import messages
 from .models import Resume
 from users.models import User
-from .form import UpdateResumeForm
+from resume.forms import UpdateResumeForm
 
 
 #function to create/update resume

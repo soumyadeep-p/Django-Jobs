@@ -13,7 +13,7 @@ class Industry(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name    
+        return self.name   
 
 class Job(models.Model):
     job_type_choices = (
@@ -21,10 +21,19 @@ class Job(models.Model):
         ('Onsite', 'Onsite'),
         ('Hybrid', 'Hybrid')
     )
+    title_choices = (
+        ('Developer', 'Developer'),
+        ('Consultant','Consultant'),
+        ('Analyst' , 'Analyst'),
+        ('Manager' , 'Manager'),
+        ('UI/UX' , 'UI/UX'),
+        ('Human Resource' , 'Human Resource'),
+        ('Operations' , 'Operations')
+    )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE) 
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, choices = title_choices, null = True, blank = True)
     city = models.CharField(max_length=100)
     salary = models.PositiveIntegerField(default=35000)
     requirements = models.TextField()

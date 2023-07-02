@@ -26,7 +26,8 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('resume/',include('resume.urls')),
     path('job/',include('job.urls')),
-    path('resume/',include('resume.urls'))
+    path('resume/',include('resume.urls')),
+    path('notifications/',include('notifications.urls')),
 ]
 
 if settings.DEBUG:
