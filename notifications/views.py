@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import User, Notif
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 
 def notifications (request):
     if request.user.is_authenticated:
@@ -10,3 +12,4 @@ def notifications (request):
     else:
         messages.warning(request, 'Permission Denied')
         return redirect('dashboard')
+    

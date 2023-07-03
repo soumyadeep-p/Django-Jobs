@@ -5,6 +5,8 @@ from .models import User
 from .form import RegisterUserForm
 from resume.models import Resume
 from company.models import Company
+from django.core.mail import send_mail
+from django.conf import settings
 
 def register_applicant(request):
     if request.method == 'POST':
