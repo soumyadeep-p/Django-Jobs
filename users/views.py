@@ -57,12 +57,6 @@ def login_user(request):
         user = authenticate(request, username = email, password = password)
         if user is not None and user.is_active:
             login(request, user)
-            # if request.user.is_applicant:
-            #     return redirect('applicant-dashboard')
-            # elif request.user.is_recruiter:
-            #     return redirect('recruiter-dashboard')
-            # else:
-            #     return redirect('login')
             return redirect('dashboard')
         else:
             messages.warning(request, 'Something went wrong!')
@@ -74,3 +68,15 @@ def logout_user(request):
     logout(request)
     messages.info(request, 'Your session has ended')
     return redirect('login')
+
+def delete_user(request):
+    user = request.user
+    logout(request)
+    user = User.objects.get(username = user)
+    user.delete()
+    messages.warning(request, 'Your account has been deleted')
+    return redirect('login')
+
+    # <li class="nav-item">
+    #     <a class="nav-link" aria-current="page" href="{% url 'update-resume' %}">Update Resume</a>
+    # </li>
