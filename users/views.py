@@ -5,13 +5,14 @@ from .models import User
 from .form import RegisterUserForm
 from resume.models import Resume
 from company.models import Company
+from company.views import _delete_company
 from django.core.mail import send_mail
 from django.conf import settings
 
 def register_applicant(request):
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
-        if form.is_valid():
+        try:
             var = form.save(commit = False)
             var.is_applicant = True
             var.username = var.email
@@ -19,7 +20,8 @@ def register_applicant(request):
             Resume.objects.create(user=var)
             messages.info(request, 'Your account has been created! Please login')
             return redirect('login')
-        else:
+        except Exception as e:
+            print(e)
             for msg in form.error_messages:
                 messages.error(request, f"{msg}: {form.error_messages[msg]}")
                 print(msg)
@@ -74,11 +76,11 @@ def logout_user(request):
 def delete_user(request):
     user = request.user
     logout(request)
+    if user.is_recruiter and user.has_company:
+        company = Company.objects.get(user = user)
+        print(company.pk)
+        _delete_company(company,user)
     user = User.objects.get(username = user)
     user.delete()
     messages.warning(request, 'Your account has been deleted')
     return redirect('login')
-
-    # <li class="nav-item">
-    #     <a class="nav-link" aria-current="page" href="{% url 'update-resume' %}">Update Resume</a>
-    # </li>

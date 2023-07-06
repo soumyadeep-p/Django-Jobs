@@ -75,9 +75,8 @@ def update_job(request, pk):
         form = UpdateJobForm(instance=job)
         context = {'form':form}
         return render(request, 'job/update_job.html', context)
-    
-#delete job
-def delete_job(request, pk):
+
+def _delete_job(pk):
     job = Job.objects.get(pk=pk)
     applicants = Resume.objects.filter(title = job.title)
     for applicant in applicants:
@@ -93,6 +92,10 @@ def delete_job(request, pk):
         recipient_list = [user.email]
         send_mail (subject , message , from_email , recipient_list)
     job.delete()
+
+#delete job
+def delete_job(request, pk):
+    _delete_job(pk)
     messages.info(request, 'Your job is deleted')
     return redirect('manage-jobs')
 
@@ -138,6 +141,9 @@ def apply_to_job(request, pk):
 def all_applicants(request, pk):
     job = Job.objects.get(pk=pk)
     applicants = job.applyjob_set.all()
+    # applicants = ApplyJob.objects.filter(job = job)
+    # for applicant in applicants:
+    #     applicant = Resume.objects.get(user = applicant)
     context = {'job':job, 'applicants':applicants}
     return render(request, 'job/all_applicants.html', context)
 
@@ -146,3 +152,18 @@ def applied_jobs(request):
     context = {'jobs':jobs}
     return render(request, 'job/applied_job.html', context)
     
+def _delete_application(applicant_resume, pk):
+    application = ApplyJob.objects.get(id = pk)
+    Notif.objects.create(
+        user = application.job.company.user,
+        content = f'{applicant_resume.__str__()} has revoked application from role of {application.job.title} for the company {application.job.company.name}'
+    )   
+    application.delete()
+    
+def delete_application(request, job_pk):
+    job = Job.objects.get(pk=job_pk)
+    application = ApplyJob.objects.get(user = request.user, job = job)
+    resume = Resume.objects.get(user = request.user)
+    _delete_application(resume, application.id)
+    messages.warning(request, 'Your application has been deleted')
+    return redirect('dashboard')

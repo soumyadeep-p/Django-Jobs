@@ -3,6 +3,7 @@ from .models import User, Notif
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from django.http import HttpResponseRedirect
 
 def notifications (request):
     if request.user.is_authenticated:
@@ -13,3 +14,11 @@ def notifications (request):
         messages.warning(request, 'Permission Denied')
         return redirect('dashboard')
     
+def delete_notification (request, pk):
+    if request.user.is_authenticated:
+        notif = Notif.objects.get(user=request.user, pk = pk)
+        notif.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')

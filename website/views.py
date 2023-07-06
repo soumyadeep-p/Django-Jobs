@@ -19,7 +19,6 @@ def job_details(request, pk):
             has_applied = True 
         else:
             has_applied = False
-
         context = {'job':job, 'has_applied':has_applied}
         return render(request, 'website/job_details.html', context)
     else:

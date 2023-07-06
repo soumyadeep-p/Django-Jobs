@@ -3,6 +3,8 @@ from django.contrib import messages
 from .models import Company
 from .form import UpdateCompanyForm
 from users.models import User
+from job.views import _delete_job
+from job.models import Job
 
 #function to update company
 def update_company(request):
@@ -28,10 +30,26 @@ def update_company(request):
         messages.warning(request,'Permission denied')
         return redirect('dashboard')
 
-
 #view company details
 def company_details(request,pk):
     company=Company.objects.get(pk=pk)
     context = {'company':company}
     return render(request , 'company/company_details.html', context)
 
+def _delete_company(comp,user):
+    jobs = Job.objects.filter(company = comp)
+    for job in jobs:                                                                                            
+        _delete_job(job.pk)
+    comp.delete()
+    user.has_company = False
+    Company.objects.create(user = user)
+    user.save()
+            
+    
+
+def delete_company(request):
+    recruiter = User.objects.get(id=request.user.id)
+    comp = Company.objects.get(user = recruiter)
+    _delete_company(comp,recruiter)
+    messages.warning(request, 'Your company has been deleted')
+    return redirect('dashboard')

@@ -3,7 +3,8 @@ from django.contrib import messages
 from .models import Resume
 from users.models import User
 from resume.forms import UpdateResumeForm
-
+from job.models import ApplyJob
+from job.views import _delete_application
 
 #function to create/update resume
 def update_resume(request):
@@ -36,5 +37,19 @@ def resume_details(request, pk):
     context = {'resume':resume}
     return render(request , 'resume/resume_details.html', context)
 
-    
-            
+           
+def _delete_resume(resume, user):
+    applications = ApplyJob.objects.filter(user = user)
+    for application in applications:
+        _delete_application(resume, application.id)
+    resume.delete()
+    user.has_resume = False
+    Resume.objects.create(user = user)
+    user.save()
+
+def delete_resume(request):
+    user = User.objects.get(pk=request.user.id)
+    resume = Resume.objects.get(user = request.user)
+    _delete_resume(resume,user)
+    messages.warning(request, 'Your resume has been deleted')
+    return redirect('dashboard')

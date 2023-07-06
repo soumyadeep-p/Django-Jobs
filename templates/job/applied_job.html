@@ -26,7 +26,7 @@
                     <td>{{job.job.salary}}</td>
 					<td>{{job.job.job_type}}</td>
 					<td>{{job.job.industry}}</td>
-                    <td><a href="{% url 'job-details' job.job.pk %}"><small>View Jobs</small></a></td>
+                    <td><a href="{% url 'job-details' job.job.pk %}"><small>Details</small></a></td>
                 </tr>
                 {% endfor %}
             </tbody>

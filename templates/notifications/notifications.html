@@ -13,6 +13,7 @@
         </div>
         <div class="card-footer">
             <small class="text-muted">{{notif.timestamp|naturaltime}}</small>
+            <a class="btn btn-primary btn-sm" href = "{% url 'delete-notification' notif.pk %}"> Delete </a>
         </div>
     </div>
 </div>

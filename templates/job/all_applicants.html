@@ -15,7 +15,7 @@
                     <th scope="col">Location</th>
                     <th scope="col">Job Position/Title</th>
                     <th scope="col">Application Date</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Resume</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,10 +24,27 @@
                     <td>{{applicant.user.resume.first_name}}</td>
                     <td>{{applicant.user.resume.surname}}</td>
                     <td>{{applicant.user.resume.location}}</td>
-                    <td>{{applicant.user.resume.job_title}}</td>
+                    <td>{{applicant.user.resume.title}}</td>
                     <td>{{applicant.timestamp}}</td>
+                    {% if applicant.user.resume.upload_resume.url %}
                     <td><a target="_blank" href="{{applicant.user.resume.upload_resume.url}}"><small>Download Resume</small></a></td>
+                    {% else %}
+                    <td>Resume not uploaded</td>
+                    {% endif %}
                 </tr>
+
+                <!-- <tr>
+                    <td>{{applicant.first_name}}</td>
+                    <td>{{applicant.surname}}</td>
+                    <td>{{applicant.location}}</td>
+                    <td>{{applicant.job_title}}</td>
+                    <td>{{applicant.timestamp}}</td>
+                    {% if applicant.user.resume.resume_upload %}
+                    <td><a target="_blank" href="{{applicant.user.resume.upload_resume.url}}"><small>Download Resume</small></a></td>
+                    {% else %}
+                    <td>Resume not uploaded</td>
+                    {% endif %}
+                </tr> -->
                 {% endfor %}
             </tbody>
         </table>
