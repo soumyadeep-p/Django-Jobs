@@ -11,7 +11,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 
-
 def create_job(request):
     if request.user.is_recruiter and request.user.has_company: 
         if request.method == 'POST':
@@ -76,6 +75,26 @@ def update_job(request, pk):
         form = UpdateJobForm(instance=job)
         context = {'form':form}
         return render(request, 'job/update_job.html', context)
+    
+#delete job
+def delete_job(request, pk):
+    job = Job.objects.get(pk=pk)
+    applicants = Resume.objects.filter(title = job.title)
+    for applicant in applicants:
+    #notification
+        user = applicant.user
+        Notif.objects.create(
+        user = user,
+        content = f'The job is no longer available for the role of {job.title} offered by {job.company}'
+        )
+        subject = 'There has been an update in the job'
+        message = f'The job is no longer available for the role of {job.title} offered by {job.company}'
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [user.email]
+        send_mail (subject , message , from_email , recipient_list)
+    job.delete()
+    messages.info(request, 'Your job is deleted')
+    return redirect('manage-jobs')
 
 
 def manage_jobs(request):
