@@ -12,7 +12,7 @@ from django.conf import settings
 def register_applicant(request):
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
-        try:
+        if form.is_valid():
             var = form.save(commit = False)
             var.is_applicant = True
             var.username = var.email
@@ -20,12 +20,8 @@ def register_applicant(request):
             Resume.objects.create(user=var)
             messages.info(request, 'Your account has been created! Please login')
             return redirect('login')
-        except Exception as e:
-            print(e)
-            for msg in form.error_messages:
-                messages.error(request, f"{msg}: {form.error_messages[msg]}")
-                print(msg)
-            messages.warning(request, 'Something went wrong!')
+        else:
+            messages.warning(request, f"{form.errors}")
             return redirect('register-applicant')
     else:
         form = RegisterUserForm()
@@ -44,16 +40,13 @@ def register_recruiter(request):
             messages.info(request, 'Your account has been created! Please login')
             return redirect('login')
         else :
-            for msg in form.error_messages:
-                messages.error(request, f"{msg}: {form.error_messages[msg]}")
-                print(msg)
-            messages.warning(request, 'Something went wrong!')
+            messages.warning(request, f"{form.errors}")
             return redirect('register-recruiter')
     else:
         form = RegisterUserForm()
         context = {'form' : form}
         return render(request, 'users/register_recruiter.html', context)
-    
+
 def login_user(request):
     if request.method == 'POST':
         email = request.POST.get('email')
