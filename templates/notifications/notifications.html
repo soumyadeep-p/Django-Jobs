@@ -9,7 +9,7 @@
 <div >
     <div class="card h-100">
         <div class="card-body">
-            <p class="card-text"> {{notif.content}} </p>
+            <p class="card-text"> {{notif.content|safe}} </p>
         </div>
         <div class="card-footer">
             <small class="text-muted">{{notif.timestamp|naturaltime}}</small>

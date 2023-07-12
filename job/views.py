@@ -23,10 +23,9 @@ def create_job(request):
                 applicants = Resume.objects.filter(title = var.title)
                 for applicant in applicants:
                     user = applicant.user
-                    #notification
                     Notif.objects.create(
                         user = user,
-                        content = f'There is a new job opening for the role of {var.title} offered by {var.company}'
+                        content = "There is a new job opening for the role of <a href='/job-details/" + str(var.id) + "/'>" + str(var.title) + "</a> offered by" + str(var.company)
                     )
                     subject = 'There is a new job opening'
                     message = f'There is a new job opening for the role of {var.title} offered by {var.company}'
@@ -60,7 +59,7 @@ def update_job(request, pk):
                 #notification
                 Notif.objects.create(
                     user = user,
-                    content = f'There has been an update in the job offer for the role of {job.title} offered by {job.company}'
+                    content = "There has been an update in the job offer for the role of <a href='/job-details/" + str(job.id) + "/'>" + str(job.title) + "</a> offered by" + str(job.company)
                 )
                 subject = 'There has been an update in the job'
                 message = f'There has been an update in the job offer for the role of {job.title} offered by {job.company}'
@@ -80,7 +79,6 @@ def _delete_job(pk):
     job = Job.objects.get(pk=pk)
     applicants = Resume.objects.filter(title = job.title)
     for applicant in applicants:
-    #notification
         user = applicant.user
         Notif.objects.create(
         user = user,
@@ -93,7 +91,6 @@ def _delete_job(pk):
         send_mail (subject , message , from_email , recipient_list)
     job.delete()
 
-#delete job
 def delete_job(request, pk):
     _delete_job(pk)
     messages.info(request, 'Your job is deleted')
@@ -120,10 +117,9 @@ def apply_to_job(request, pk):
             )
             applicant = Resume.objects.get(user=request.user)
             applicant = f'{applicant.first_name} {applicant.surname}'
-            #notification
             Notif.objects.create(
                 user = job.company.user,
-                content = f'{applicant} has applied to your company {job.company} for the role of {job.title}'
+                content = "{applicant} has applied to your company" + str(job.company) + "for the role of <a href='/job-details/" + str(job.id) + "/'>" + str(job.title) + "</a> offered by"
             )
             subject = 'You have applied for job'
             message = f'{applicant} has applied to your company {job.company} for the role of {job.title}'
@@ -140,10 +136,7 @@ def apply_to_job(request, pk):
         
 def all_applicants(request, pk):
     job = Job.objects.get(pk=pk)
-    # applicants = job.applyjob_set.all()
     applied_jobs = ApplyJob.objects.filter(job = job)
-    # for applicant in applied_jobs:
-    #     applicant = Resume.objects.get(user = applicant)
     context = {'job':job, 'applied_jobs':applied_jobs}
     return render(request, 'job/all_applicants.html', context)
 
@@ -156,7 +149,7 @@ def _delete_application(applicant_resume, pk):
     application = ApplyJob.objects.get(id = pk)
     Notif.objects.create(
         user = application.job.company.user,
-        content = f'{applicant_resume.__str__()} has revoked application from role of {application.job.title} for the company {application.job.company.name}'
+        content = applicant_resume.__str__() + "has revoked application from role of <a href='/job-details/" + str(application.job.id) + "/'>" + str(application.job.title) + "</a>" + "from your company" + application.job.company.__str__()
     )   
     application.delete()
     
@@ -181,7 +174,7 @@ def accept_job(request, app_pk):
     # notification to applicant
     Notif.objects.create(
         user = user,
-        content = f'CONGRATS! Your application for {job.title} has been accepted.'
+        content = "CONGRATS! Your application for <a href='/job-details/" + str(application.job.id) + "/'>" + str(application.job.title) + "</a> has been accepted."
     )
 
     #email to recruiter
@@ -213,13 +206,12 @@ def reject_job(request, app_pk):
     resume = Resume.objects.get(user = user)
     messages.info(request, f'You have rejected the application for {job.title} from {resume.first_name} {resume.surname}')
     
-    # notification to user who applied
+    # notification to applicant
     Notif.objects.create(
         user = user,
-        content = f'Sorry:( . Your application for {job.title} has been rejected.'
+        content = "Sorry:( . Your application for <a href='/job-details/" + str(application.job.id) + "/'>" + str(application.job.title) + "</a> has been rejected."
     )
-
-    #email to user who applied
+    #email to applicant
     subject = f'Update on {job.title} job application'
     message = f'Dear {resume.first_name} {resume.surname}, we are very sorry to inform youthat your application to {job.company} for the role of {job.title} has been rejected. We wish you all the very best.'
     from_email = settings.EMAIL_HOST_USER
