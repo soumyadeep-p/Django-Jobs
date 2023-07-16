@@ -40,7 +40,7 @@ class Job(models.Model):
     ideal_candidate = models.TextField()
     is_available = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    industry = models.ForeignKey(Industry, on_delete=models.DO_NOTHING, null=True, blank=True)
+    industry = models.TextField(null = True, blank = True)
     state = models.ForeignKey(State, on_delete=models.DO_NOTHING, null=True, blank=True)
     job_type = models.CharField(max_length=20, choices=job_type_choices, null=True, blank=True)
 
