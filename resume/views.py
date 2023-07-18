@@ -8,7 +8,7 @@ from job.views import _delete_application
 
 #function to create/update resume
 def update_resume(request):
-    if request.user.is_applicant : #check so that recruiter cannot create a resume
+    if request.user.is_authenticated and request.user.is_applicant : #check so that recruiter cannot create a resume
         resume = Resume.objects.get(user=request.user)
         if request.method == 'POST' :
             form = UpdateResumeForm(request.POST, request.FILES, instance=resume)

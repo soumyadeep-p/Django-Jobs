@@ -42,7 +42,7 @@ def register_applicant(request):
                 return redirect('register-applicant')
             else:
                 var.save()
-                messages.info(request, 'Please check your e-mail for email confirmation')
+                messages.info(request, 'Please check your e-mail for user confirmation')
                 return redirect('register-applicant')
         else:
             print(form.errors)
@@ -77,7 +77,7 @@ def register_recruiter(request):
                 return redirect('register-recruiter')
             else:
                 var.save()
-                messages.info(request, 'Please check your e-mail for email confirmation')
+                messages.info(request, 'Please check your e-mail for user confirmation')
                 return redirect('register-recruiter')
         else:
             print(form.errors)
@@ -130,7 +130,7 @@ def _delete_user(pk):
     user = User.objects.get(id = pk)
     if user.is_recruiter and user.has_company:
         company = Company.objects.filter(user = user)
-        if company.exitsts():
+        if company.exists():
             _delete_company(company[0],user)
     if user.is_applicant:
         resume = Resume.objects.filter(user=user)
@@ -139,8 +139,12 @@ def _delete_user(pk):
     user.delete()
 
 def delete_user(request):
-    user = request.user
-    logout(request)
-    _delete_user(user.id)
-    messages.warning(request, 'Your account has been deleted')
-    return redirect('login')
+    if request.user.is_authenticated:
+        user = request.user
+        logout(request)
+        _delete_user(user.id)
+        messages.warning(request, 'Your account has been deleted')
+        return redirect('login')
+    else:
+        messages.info(request, 'Please Log In First')
+        return redirect('login')

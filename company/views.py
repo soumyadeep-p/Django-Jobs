@@ -6,9 +6,9 @@ from users.models import User
 from job.views import _delete_job
 from job.models import Job
 
-#function to update company
+#function to create company
 def update_company(request):
-    if request.user.is_recruiter:
+    if request.user.is_authenticated and request.user.is_recruiter:
         company = Company.objects.get(user=request.user)
         if(request.method == 'POST'):
             form = UpdateCompanyForm(request.POST, instance=company)
@@ -39,7 +39,7 @@ def company_details(request,pk):
 def _delete_company(comp,user):
     jobs = Job.objects.filter(company = comp)
     for job in jobs:                                                                                            
-        _delete_job(job.pk)
+        _delete_job(job)
     comp.delete()
     user.has_company = False
     Company.objects.create(user = user)
@@ -48,8 +48,12 @@ def _delete_company(comp,user):
     
 
 def delete_company(request):
-    recruiter = User.objects.get(id=request.user.id)
-    comp = Company.objects.get(user = recruiter)
-    _delete_company(comp,recruiter)
-    messages.warning(request, 'Your company has been deleted')
-    return redirect('dashboard')
+    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified:
+        recruiter = User.objects.get(id=request.user.id)
+        comp = Company.objects.get(user = recruiter)
+        _delete_company(comp,recruiter)
+        messages.warning(request, 'Your company has been deleted')
+        return redirect('dashboard')
+    else:
+        messages.info(request, 'Something Went Wrong')
+        return redirect('login')
