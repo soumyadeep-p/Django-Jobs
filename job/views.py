@@ -50,7 +50,7 @@ def create_job(request):
 
 def update_job(request, pk):
     job = Job.objects.get(pk=pk)
-    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.company_id == request.user.company.id:  #Ensure appropriate user given access
+    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.company.user == request.user:  #Ensure appropriate user given access
         if request.method == 'POST':
             form = UpdateJobForm(request.POST, instance=job)
             if form.is_valid():
@@ -77,8 +77,8 @@ def update_job(request, pk):
             context = {'form':form}
             return render(request, 'job/update_job.html', context)
     else:
-        messages.info(request, 'Please Log In to continue')
-        return redirect('login')
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')
 
 
 
@@ -100,13 +100,13 @@ def _delete_job(job):
 
 def delete_job(request, pk):
     job = Job.objects.get(pk=pk)
-    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.company_id == request.user.company.id:  #Ensure appropriate user given access
+    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.company.user == request.user:  #Ensure appropriate user given access
         _delete_job(job)
         messages.info(request, 'Your job is deleted')
         return redirect('manage-jobs')
     else:
-        messages.info(request, 'Please Log In to Continue')
-        return redirect('login')
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')
 
 
 
@@ -120,7 +120,7 @@ def manage_jobs(request):
         return redirect('login')
 
 def apply_to_job(request, pk):
-    if request.user.is_authenticated and request.user.is_applicant:    #user must be of applicant type to apply
+    if request.user.is_authenticated and request.user.is_applicant and request.user.is_verified:    #user must be of applicant type to apply
         job = Job.objects.get(pk = pk)
 
         if ApplyJob.objects.filter(user = request.user, job = pk).exists():  #if user has already applied
@@ -147,29 +147,29 @@ def apply_to_job(request, pk):
             messages.info(request, 'You have successfully applied! Please see dashboard')
             return redirect('dashboard')
     else:
-        messages.info(request, 'Please log in to continue')
-        return redirect('login')
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')
 
         
 def all_applicants(request, pk):
     job = Job.objects.get(pk=pk)
 
-    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.company_id == request.user.company.id:  #Ensure appropriate user given access
+    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.company.user == request.user:  #Ensure appropriate user given access
         applied_jobs = ApplyJob.objects.filter(job = job)
         context = {'job':job, 'applied_jobs':applied_jobs}
         return render(request, 'job/all_applicants.html', context)
     else:
-        messages.info(request, 'Please Log In to Continue')
-        return redirect('login')
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')
 
 def applied_jobs(request):
-    if request.user.is_authenticated and request.user.is_applicant and request.user.is_verified :
+    if request.user.is_authenticated and request.user.is_applicant and request.user.is_verified:
         jobs = ApplyJob.objects.filter(user=request.user)
         context = {'jobs':jobs}
         return render(request, 'job/applied_job.html', context)
     else:
-        messages.info(request, 'Please Log In to Continue')
-        return redirect('login')
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')
 
     
 def _delete_application(applicant_resume, pk):
@@ -179,25 +179,40 @@ def _delete_application(applicant_resume, pk):
         content = applicant_resume.__str__() + " has revoked their application for the role of <a href='/job-details/" + str(application.job.id) + "/'>" + str(application.job.title) + "</a>" + " from your company " + application.job.company.__str__()
     )   
     application.delete()
-    
+
 def delete_application(request, job_pk):
-    if request.user.is_authenticated and request.user.is_applicant and request.user.is_verified and ApplyJob.objects.filter(user = request.user, job = job_pk).exists(): 
+    if request.user.is_authenticated and request.user.is_applicant and request.user.is_verified:
         job = Job.objects.get(pk=job_pk)
         application = ApplyJob.objects.get(user = request.user, job = job)
+        if application.DoesNotExist:
+            messages.warning(request, 'Permission Denied')
+            return redirect('dashboard')
         resume = Resume.objects.get(user = request.user)
         _delete_application(resume, application.id)
         messages.warning(request, 'Your application has been deleted')
         return redirect('dashboard')
     else:
-        messages.info(request, 'Something went wrong')
-        return redirect('login')
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')
+    
+# def delete_application(request, job_pk):
+#     if request.user.is_authenticated and request.user.is_applicant and request.user.is_verified and ApplyJob.objects.filter(user = request.user, job = job_pk).exists(): 
+#         job = Job.objects.get(pk=job_pk)
+#         application = ApplyJob.objects.get(user = request.user, job = job)
+#         resume = Resume.objects.get(user = request.user)
+#         _delete_application(resume, application.id)
+#         messages.warning(request, 'Your application has been deleted')
+#         return redirect('dashboard')
+#     else:
+#         messages.info(request, 'Something went wrong')
+#         return redirect('login')
 
 
 def accept_job(request, app_pk):
     application = ApplyJob.objects.get(pk=app_pk)
     job = application.job
 
-    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.user == request.user:
+    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.company.user == request.user:
 
         application.status = 'Accepted'
         application.save()
@@ -231,15 +246,15 @@ def accept_job(request, app_pk):
         return render(request, 'job/all_applicants.html', context)
 
     else:
-        messages.info(request, 'Something Went Wrong')
-        return redirect('login')
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')
 
 
 def reject_job(request, app_pk):
     application = ApplyJob.objects.get(pk=app_pk)
     job = application.job
 
-    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.user == request.user:
+    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and job.company.user == request.user:
         
         application.status = 'Declined'
         application.save()
@@ -265,5 +280,5 @@ def reject_job(request, app_pk):
         return render(request, 'job/all_applicants.html', context)
 
     else:
-        messages.info(request, 'Something Went Wrong')
-        return redirect('login')
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')

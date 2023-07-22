@@ -19,6 +19,9 @@ def nice_hash(hash):
     return new_hash
 
 def register_applicant(request):
+    if request.user.is_authenticated and request.user.is_verified:
+        messages.warning(request, 'You are already Logged In')
+        return redirect('dashboard')
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
         if form.is_valid():
@@ -54,6 +57,9 @@ def register_applicant(request):
         return render(request, 'users/register_applicant.html', context)
     
 def register_recruiter(request):
+    if request.user.is_authenticated and request.user.is_verified:
+        messages.warning(request, 'You are already Logged In')
+        return redirect('dashboard')
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
         if form.is_valid():
@@ -89,6 +95,9 @@ def register_recruiter(request):
         return render(request, 'users/register_recruiter.html', context)
     
 def verify_user(request, pk):
+    if request.user.is_authenticated and request.user.is_verified:
+        messages.warning(request, 'You are already Logged In')
+        return redirect('dashboard')
     try:
         user = User.objects.get(email_hash = pk)
         user.is_verified = True
@@ -108,6 +117,9 @@ def verify_user(request, pk):
         return redirect('home')
 
 def login_user(request):
+    if request.user.is_authenticated and request.user.is_verified:
+        messages.warning(request, 'You are already Logged In')
+        return redirect('dashboard')
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -122,9 +134,13 @@ def login_user(request):
         return render(request, 'users/login.html')
     
 def logout_user(request):
-    logout(request)
-    messages.info(request, 'Your session has ended')
-    return redirect('login')
+    if request.user.is_authenticated and request.user.is_verified:
+        logout(request)
+        messages.info(request, 'Your session has ended')
+        return redirect('login')
+    else:
+        messages.warning(request, 'Please Log In to continue')
+        return redirect('login')
 
 def _delete_user(pk):
     user = User.objects.get(id = pk)
@@ -139,12 +155,12 @@ def _delete_user(pk):
     user.delete()
 
 def delete_user(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_verified:
         user = request.user
         logout(request)
         _delete_user(user.id)
         messages.warning(request, 'Your account has been deleted')
         return redirect('login')
     else:
-        messages.info(request, 'Please Log In First')
+        messages.info(request, 'Please Log In to continue')
         return redirect('login')

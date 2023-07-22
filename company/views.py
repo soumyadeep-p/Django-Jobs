@@ -8,7 +8,7 @@ from job.models import Job
 
 #function to create company
 def update_company(request):
-    if request.user.is_authenticated and request.user.is_recruiter:
+    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified:
         company = Company.objects.get(user=request.user)
         if(request.method == 'POST'):
             form = UpdateCompanyForm(request.POST, instance=company)
@@ -48,12 +48,12 @@ def _delete_company(comp,user):
     
 
 def delete_company(request):
-    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified:
+    if request.user.is_authenticated and request.user.is_recruiter and request.user.is_verified and request.user.has_company:
         recruiter = User.objects.get(id=request.user.id)
         comp = Company.objects.get(user = recruiter)
         _delete_company(comp,recruiter)
         messages.warning(request, 'Your company has been deleted')
         return redirect('dashboard')
     else:
-        messages.info(request, 'Something Went Wrong')
-        return redirect('login')
+        messages.warning(request,'Permission denied')
+        return redirect('dashboard')

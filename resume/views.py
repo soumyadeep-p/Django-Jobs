@@ -8,7 +8,7 @@ from job.views import _delete_application
 
 #function to create/update resume
 def update_resume(request):
-    if request.user.is_authenticated and request.user.is_applicant : #check so that recruiter cannot create a resume
+    if request.user.is_authenticated and request.user.is_applicant and request.user.is_verified : #check so that recruiter cannot create a resume
         resume = Resume.objects.get(user=request.user)
         if request.method == 'POST' :
             form = UpdateResumeForm(request.POST, request.FILES, instance=resume)
@@ -48,8 +48,12 @@ def _delete_resume(resume, user):
     user.save()
 
 def delete_resume(request):
-    user = User.objects.get(pk=request.user.id)
-    resume = Resume.objects.get(user = request.user)
-    _delete_resume(resume,user)
-    messages.warning(request, 'Your resume has been deleted')
-    return redirect('dashboard')
+    if request.user.is_authenticated and request.user.is_applicant and request.user.is_verified and request.user.has_resume:
+        user = request.user
+        resume = Resume.objects.get(user = request.user)
+        _delete_resume(resume,user)
+        messages.warning(request, 'Your resume has been deleted')
+        return redirect('dashboard')
+    else:
+        messages.warning(request, 'Permission Denied')
+        return redirect('dashboard')

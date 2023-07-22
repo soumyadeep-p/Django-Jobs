@@ -10,13 +10,14 @@
             <p class="col-md-8 fs-5 mt-3">
                 {{job.state}} | Remote | NGN{{job.salary|intcomma}}
             </p>
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and request.user.is_applicant and request.user.is_verified %}
                 {% if has_applied == False %}
                     <a href="{% url 'apply-to-job' job.pk %}" class="btn btn-primary btn-lg">Apply Now</a>
                 {% else %}
                     <p><span class="text-danger">You have already applied for this job</span></p>
                     <a href="{% url 'delete-application' job.pk %}" class="btn btn-primary btn-lg">Revoke Application</a>
-            {% endif %}
+                {% endif %}
+            {% elif user.is_authenticated and request.user.is_recruiter and request.user.is_verified %}
             {% else %}
                 <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Login to Apply</a>
             {% endif %}

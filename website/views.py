@@ -14,7 +14,7 @@ def job_listing(request):
 
 def job_details(request, pk):
     job = Job.objects.get(pk=pk)
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_applicant and request.user.is_verified:
         if ApplyJob.objects.filter(user=request.user, job=pk).exists():
             has_applied = True 
         else:
