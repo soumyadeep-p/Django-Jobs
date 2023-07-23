@@ -3,7 +3,7 @@
 This is a [Python](https://www.python.org/) based Online Recruitment Portal developed using [Django](https://www.djangoproject.com/), a Python web framework and [SQLite](https://www.sqlite.org/index.html).The Job Portal provides a platform for job seekers to search and apply for job opportunities, while employers can post job vacancies and manage applications efficiently.</br>
 
 # Tech-Stack Used:
-The Job Portal is built using [Django](https://www.djangoproject.com/), a high-level Python web framework known for its scalability and robustness. The project also utilizes HTML and CSS for front-end development, and incorporates a relational database management system [PostgreSQL](https://www.postgresql.org/) to handle data storage efficiently.
+The Job Portal is built using [Django](https://www.djangoproject.com/), a high-level Python web framework known for its scalability and robustness. The project also utilizes HTML and Bootstrap for front-end development, and incorporates a relational database management system [SQLite3](https://www.sqlite.org/index.html) to handle data storage efficiently.
 
 # Features
 * Users can register as either a <b>Recuiter</b> or <b>Applicant</b>.
@@ -72,6 +72,16 @@ To start the Portal , type the following command in the terminal:
 
 ![image](https://github.com/Ayush-721/temp/assets/95296019/a57855a6-794d-42ae-bfcf-9e11ada563bd)</br></br>
 
+* <b> Adding Job Ads: </b></br>
+
+![Screenshot (633)](https://github.com/DipitPatowari/Django-Jobs/assets/95296019/ae81e2a1-b1ed-4b8c-a035-3628c2b97324)
+</br></br>
+
+<b> Added Job shows up </b></br>
+
+![Screenshot (635)](https://github.com/DipitPatowari/Django-Jobs/assets/95296019/7cedc889-e0b6-4eca-83d5-53b545702af5)
+
+
 
 * <b> All Available Jobs(For Applicants) </b></br>
 
@@ -98,7 +108,6 @@ To start the Portal , type the following command in the terminal:
  <b>Through Email</b></br>
  
 ![Notifications_recruiter](https://github.com/DipitPatowari/Django-Jobs/assets/95296019/ff0472ff-0acd-42ea-9d34-51aae3819592)
-
 
 # Team:
 
