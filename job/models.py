@@ -2,18 +2,7 @@ from django.db import models
 from users.models import User
 from company.models import Company
 from resume.models import Resume
-
-class State(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-    
-class Industry(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name   
+ 
 
 class Job(models.Model):
     job_type_choices = (
@@ -21,6 +10,27 @@ class Job(models.Model):
         ('Onsite', 'Onsite'),
         ('Hybrid', 'Hybrid')
     )
+
+    state_choices = (
+        ('Karnataka', 'Karnataka'),
+        ('Assam', 'Assam'),
+        ('Gujarat', 'Gujarat'),
+        ('Kashmir', 'Kashmir'),
+        ('Tamil Nadu', 'Tamil Nadu'),
+        ('Bihar', 'Bihar'),
+        ('Uttar Pradesh', 'Uttar Pradesh')
+    )
+
+    industry_choices = (
+        ('Technology', 'Technology'),
+        ('Education', 'Education'),
+        ('Transportation', 'Transportation'),
+        ('Finance', 'Finance'),
+        ('Healthcare', 'Healthcare'),
+        ('Sports', 'Sports'),
+        ('Energy', 'Energy')
+    )
+    
     title_choices = (
         ('Developer', 'Developer'),
         ('Consultant','Consultant'),
@@ -40,8 +50,8 @@ class Job(models.Model):
     ideal_candidate = models.TextField()
     is_available = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    industry = models.TextField(null = True, blank = True)
-    state = models.ForeignKey(State, on_delete=models.DO_NOTHING, null=True, blank=True)
+    industry = models.CharField(max_length=20, choices=industry_choices, null=True, blank=True)
+    state = models.CharField(max_length=20, choices=state_choices, null=True, blank=True)
     job_type = models.CharField(max_length=20, choices=job_type_choices, null=True, blank=True)
 
     def __str__(self):
