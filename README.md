@@ -74,12 +74,12 @@ To start the Portal , type the following command in the terminal:
 
 * <b> Adding Job Ads: </b></br>
 
-![Screenshot (633)](https://github.com/DipitPatowari/Django-Jobs/assets/95296019/ae81e2a1-b1ed-4b8c-a035-3628c2b97324)
+![Screenshot (636)](https://github.com/DipitPatowari/Django-Jobs/assets/95296019/1de9563a-3db5-4a44-af7a-8c194676f4dd)
 </br></br>
 
 <b> Added Job shows up </b></br>
+![image](https://github.com/DipitPatowari/Django-Jobs/assets/95296019/6ee829fc-b61d-42e0-928b-a4a8435e6713)
 
-![Screenshot (635)](https://github.com/DipitPatowari/Django-Jobs/assets/95296019/7cedc889-e0b6-4eca-83d5-53b545702af5)
 
 
 
