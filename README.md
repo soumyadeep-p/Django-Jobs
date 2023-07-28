@@ -13,12 +13,14 @@ The Job Portal is built using [Django](https://www.djangoproject.com/), a high-l
 * Important updates will be shared by <b>email notifications</b>.
 
 * <b>Recruiters (How to use)</b>
-	- Register your comapany details.
+	- Register your company details.
 	- Post jobs, along with details like job title, company, location, industry, salary and work flexibity(Remote/Onsite/Hybrid).
-	- View candidates (and their resumes) that have applied to your jobs, and then accept/reject applications.
+	- View candidates (and their resumes) that have applied to your jobs
+ 	- Have the option to accept/reject applications.
 * <b>Applicants (How to use)</b>
 	- Upload your biodata along with your resume.
-	- Browse and apply to jobs. Will receive updates ab
+	- Browse for jobs using filters and apply to desired jobs
+ 	- Check notifications page for any updates regarding new job openings as well as status of job application
 
 # How to Use:
 The Job Portal can be installed locally by running the below command.
