@@ -119,5 +119,6 @@ This project was made by:
 * [Chandrashekar A. Giridharan](https://github.com/chandrashekar27)
 * [Ayush Kumar](https://github.com/Ayush-721)
 * [Mihit Sreejith](https://github.com/mihits)
+* [Tanish Verma](https://github.com/v-tanish012)
 
 
