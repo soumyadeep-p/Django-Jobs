@@ -120,5 +120,6 @@ This project was made by:
 * [Ayush Kumar](https://github.com/Ayush-721)
 * [Mihit Sreejith](https://github.com/mihits)
 * [Tanish Verma](https://github.com/v-tanish012)
+* [Soumyadeep Paul](https://github.com/soumyadeep-p)
 
 
